@@ -7,5 +7,5 @@
 ## Members:
 | No | Department | Full Name| Email |
 | --- | --- |--- |--- |
-| 150119698 | CSE | HÜSEYİN HASILCI | huseynhasilci@marun.edu.tr |
+| 150119698 | CSE | HÜSEYİN HASILCI | huseyinhasilci@marun.edu.tr |
 | 150817008 | BIO  | ELİF TUTAKLİ | eliftutakli@marun.edu.tr |
