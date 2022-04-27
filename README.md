@@ -9,3 +9,4 @@
 | --- | --- |--- |--- |
 | 150119698 | CSE | HÜSEYİN HASILCI | huseyinhasilci@marun.edu.tr |
 | 150817008 | BIO  | ELİF TUTAKLİ | eliftutakli@marun.edu.tr |
+| 150116078 | CSE  | MUSTAFA SERTAÇ ÖZTÜRK | msertac@marun.edu.tr |
