@@ -3,7 +3,7 @@
 * Course code: **42747899** </br>
 * Semester: **2022** </br>
 * Group number: **4**  </br>
-* Title: **Predict Critical Situatio**  </br>
+* Title: **Predict Critical SituatioN**  </br>
 ## Members:
 | No | Department | Full Name| Email |
 | --- | --- |--- |--- |
