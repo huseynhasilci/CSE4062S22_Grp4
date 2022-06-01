@@ -14,17 +14,20 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 df = pd.read_excel('IssueTickets.ods', engine='odf')
-df = df.drop(['ISSUE_ID', 'ISSUE_TYPE', 'PRIORITY', 'JIRANAME', 'WORK_LOG_TOTAL', 'WORK_LOG_RATIO', 'ISSUE_CATEGORY', 'ISSUE_SUB_CATEGORY', 'LABEL', 'CREATION_DATE', 'RESOLUTION_DATE'], axis = 1)
-
+#df = df.drop(['ISSUE_ID', 'ISSUE_TYPE', 'PRIORITY', 'JIRANAME', 'WORK_LOG_TOTAL', 'WORK_LOG_RATIO', 'ISSUE_CATEGORY', 'ISSUE_SUB_CATEGORY', 'LABEL', 'CREATION_DATE', 'RESOLUTION_DATE'], axis = 1)
+df = df.drop(['ISSUE_ID', 'REPORTER', 'JIRANAME', 'COMPNAME', 'WORK_LOG', 'WORK_LOG_TOTAL', 'WORK_LOG_RATIO', 'ISSUE_CATEGORY', 'ISSUE_SUB_CATEGORY', 'LABEL', 'CREATION_DATE', 'RESOLUTION_DATE'], axis=1)
 le = LabelEncoder()
 for column in df.columns:
     temp_new = le.fit_transform(df[column].astype('category'))
     df.drop(labels=[column], axis="columns", inplace=True)
     df[column] = temp_new
 
-X = df.iloc[:, :-1]
-y = df.iloc[:, -1]
+X = df.iloc[:, :]
+y = df.iloc[:, 1:2]
 
+print(y)
+X = X.drop(['PRIORITY'], axis=1)
+print(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=0)
 
 sc = StandardScaler()
@@ -42,17 +45,19 @@ classifiers = [
     MLPClassifier(alpha=1, max_iter=1000),
     AdaBoostClassifier(),
     GaussianNB(),
+    LogisticRegression(solver='lbfgs', max_iter=3000)
+
 ]
 for i in classifiers:
     classifier = i
 
-    classifier.fit(X_train, y_train)
+    classifier.fit(X_train, np.ravel(y_train))
 
     y_pred = classifier.predict(X_test)
     print(classifier.score(X_test, y_test))
     print(confusion_matrix(y_test, y_pred))
-    print(precision_score(y_test, y_pred, average='macro', zero_division=1))
-    print(precision_score(y_test, y_pred, average='micro', zero_division=1))
-    print(precision_score(y_test, y_pred, average='weighted', zero_division=1))
-    print(precision_score(y_test, y_pred, average=None, zero_division=1))
+    #print(precision_score(y_test, y_pred, average='macro', zero_division=1))
+    #print(precision_score(y_test, y_pred, average='micro', zero_division=1))
+    #print(precision_score(y_test, y_pred, average='weighted', zero_division=1))
+    #print(precision_score(y_test, y_pred, average=None, zero_division=1))
     print(classification_report(y_test, y_pred, zero_division=1))
