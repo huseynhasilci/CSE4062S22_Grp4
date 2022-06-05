@@ -12,9 +12,28 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from datetime import datetime
+import matplotlib.pyplot as plt
+classifiers = [
+    KNeighborsClassifier(10),
+    SVC(kernel="linear", C=0.35),
+    SVC(gamma=3, C=2),
+    # GaussianProcessClassifier(1.0 * RBF(1.0)),
+    DecisionTreeClassifier(max_depth=20),
+    RandomForestClassifier(max_depth=20, n_estimators=10, max_features=1),
+    MLPClassifier(alpha=5, max_iter=3000),
+    AdaBoostClassifier(),
+    GaussianNB(),
+    LogisticRegression(solver='lbfgs', max_iter=3000),
+    QuadraticDiscriminantAnalysis()
 
-import iso8601
+]
+classifiers_names = ['KNN', 'SVC(linear)', 'SVC', 'Decision Tree Classifier', 'Random Forest Classifier',
+                     'MLP Classifier', 'AdaBoostClassifier', 'GaussianNB', 'LogisticRegression',
+                     'QuadraticDiscriminantAnalysis']
+# import iso8601
 df = pd.read_excel('IssueTickets.ods', engine='odf')
 df = df.drop(['ISSUE_ID', 'JIRANAME', 'WORKER'], axis=1)
 creation_date = df['CREATION_DATE']
@@ -68,8 +87,49 @@ for i in range(len(cre_year_list)):
 
     solved_time_list.append(str(solved_year) + 'Y-'+str(solved_month) + 'M-' + str(solved_day)+'D')
 
-    print(f'year: {solved_year} month: {solved_month} day: {solved_day}')
+    # print(f'year: {solved_year} month: {solved_month} day: {solved_day}')
+
 
 # print(df['CREATION_DATE'])
 df['solved_time'] = solved_time_list
-print(df)
+le = LabelEncoder()
+for column in df.columns:
+    temp_new = le.fit_transform(df[column].astype('category'))
+    df.drop(labels=[column], axis="columns", inplace=True)
+    df[column] = temp_new
+X = df[['REPORTER', 'ISSUE_TYPE', 'PRIORITY', 'COMPNAME', 'EMPLOYEE_TYPE', 'WORK_LOG', 'WORK_LOG_TOTAL','solved_time']]
+#X = df[['ISSUE_TYPE', 'PRIORITY','EMPLOYEE_TYPE']]
+y = df['ISSUE_CATEGORY']
+
+print(X)
+print(y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=0)
+
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+for c in range(len(classifiers)):
+    classifier = classifiers[c]
+
+    classifier.fit(X_train, np.ravel(y_train))
+
+    y_pred = classifier.predict(X_test)
+    print(classifier.score(X_test, y_test))
+    """conf_matrix = confusion_matrix(y_test, y_pred)
+    fig, ax = plt.subplots(figsize=(10, 10))
+    ax.matshow(conf_matrix, cmap=plt.cm.Blues, alpha=0.3)
+    for i in range(conf_matrix.shape[0]):
+        for j in range(conf_matrix.shape[1]):
+            ax.text(x=j, y=i, s=conf_matrix[i, j], va='center', ha='center', size='xx-large')
+
+    plt.xlabel('Predictions', fontsize=18)
+    plt.ylabel('Actuals', fontsize=18)
+    plt.title(f'Confusion Matrix {classifiers_names[c]}', fontsize=18)
+    plt.show()"""
+    #print(precision_score(y_test, y_pred, average='macro', zero_division=1))
+    #print(precision_score(y_test, y_pred, average='micro', zero_division=1))
+    #print(precision_score(y_test, y_pred, average='weighted', zero_division=1))
+    #print(precision_score(y_test, y_pred, average=None, zero_division=1))
+    print(classification_report(y_test, y_pred, zero_division=1))
+#print(df)
