@@ -115,7 +115,7 @@ for c in range(len(classifiers)):
 
     y_pred = classifier.predict(X_test)
     print(classifier.score(X_test, y_test))
-    conf_matrix = confusion_matrix(y_test, y_pred)
+    """conf_matrix = confusion_matrix(y_test, y_pred)
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.matshow(conf_matrix, cmap=plt.cm.Blues, alpha=0.3)
     for i in range(conf_matrix.shape[0]):
@@ -125,10 +125,11 @@ for c in range(len(classifiers)):
     plt.xlabel('Predictions', fontsize=18)
     plt.ylabel('Actuals', fontsize=18)
     plt.title(f'Confusion Matrix {classifiers_names[c]}', fontsize=18)
-    plt.show()
+    plt.show()"""
     #print(precision_score(y_test, y_pred, average='macro', zero_division=1))
     #print(precision_score(y_test, y_pred, average='micro', zero_division=1))
     #print(precision_score(y_test, y_pred, average='weighted', zero_division=1))
     #print(precision_score(y_test, y_pred, average=None, zero_division=1))
+    print(classifiers_names[c])
     print(classification_report(y_test, y_pred, zero_division=1))
 #print(df)

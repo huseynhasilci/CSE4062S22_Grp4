@@ -131,5 +131,6 @@ for c in range(len(classifiers)):
     #print(precision_score(y_test, y_pred, average='micro', zero_division=1))
     #print(precision_score(y_test, y_pred, average='weighted', zero_division=1))
     #print(precision_score(y_test, y_pred, average=None, zero_division=1))
+    print(classifiers_names[c])
     print(classification_report(y_test, y_pred, zero_division=1))
 #print(df)
